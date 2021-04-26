@@ -1,0 +1,52 @@
+Q1:
+For creating 3 tables:
+create table AGENT( AGENT_CODE varchar(4)PRIMARY KEY, AGENT_NAME varchar(100) NOT NULL, COUNTRY varchar(100) NOT NULL,PHONE_NO INT(10) NOT NULL,STATUS TINYINT NOT NULL CHECK (STATUS IN (0,1)));
+create table CUSTOMER( CUST_CODE varchar(4) NOT NULL, CUST_NAME varchar(100) NOT NULL, CUST_CITY varchar(100) NOT NULL, PHONE_NO INT(10) NOT NULL, AGENT_CODE varchar(4) NOT NULL, PRIMARY KEY (CUST_CODE), FOREIGN KEY (AGENT_CODE) REFERENCES AGENT (AGENT_CODE));
+create table ORDERS( ORDER_NUM varchar(4) PRIMARY KEY,  CUST_CODE varchar(4) NOT NULL, AGENT_CODE varchar(4) not null, AMOUNT INT not null, ORDER_DATE DATE not null, FOREIGN KEY (CUST_CODE) REFERENCES CUSTOMER (CUST_CODE), FOREIGN KEY (AGENT_CODE) REFERENCES AGENT (AGENT_CODE));
+
+For inserting value into:
+insert into AGENT values('A001','Joe','Canada','2345623452',0);
+insert into AGENT values('A002','Sara','India','1234567890',1);
+insert into AGENT values('A003','Wiley','Bahamas','987654321',1);
+insert into AGENT values('A004','Katniss','Ireland','3456543698',1); 
+insert into AGENT values('A005','Arjun','India','9844342345',0);
+insert into CUSTOMER values('C001','Albert','Chennai','9798865876','A001');
+insert into CUSTOMER values('C002','Ravi','Bangalore','9876123456','A002');
+insert into CUSTOMER values('C003','Archana','Chennai','94523098123','A004');
+insert into CUSTOMER values('C004','Riya','Trichy','9612309876','A002');
+insert into CUSTOMER values('C005','Pavithra','Kanyakumari','9612309856','A005');
+insert into ORDERS values('O001','C001','A001',50000,'2021/02/12');
+insert into ORDERS values('O002','C002','A002',3000,'2021/03/26');
+insert into ORDERS values('O003','C005','A004',25000,'2021/03/06');
+insert into ORDERS values('O004','C003','A003',6000,'06/03/2021');
+insert into ORDERS values('O006','C004','A005',10000,'2019/09/13');
+
+Q2:
+
+alter table AGENT add (COMMISSION decimal(3,2))
+update AGENT set COMMISSION = '0.2' where AGENT_CODE= 'A001';
+update AGENT set COMMISSION = '0.96' where AGENT_CODE= 'A002';
+update AGENT set COMMISSION = '0.23' where AGENT_CODE= 'A004';
+update AGENT set COMMISSION = '0.12' where AGENT_CODE= 'A003';
+update AGENT set COMMISSION = '0.76' where AGENT_CODE= 'A005';
+
+Q3:
+
+alter table AGENT drop column PHONE_NO;
+
+q4:
+
+alter table AGENT change COMMISSION COMMISSION_PERCENTAGE decimal(3,2);
+
+Q5:
+
+create table AGENT_DETAILS as select * from AGENT;
+
+
+Q6:
+
+Truncate ORDERS;
+
+Q7:
+
+alter table ORDERS alter AMOUNT set default 10000;
