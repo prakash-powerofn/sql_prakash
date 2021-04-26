@@ -1,0 +1,88 @@
+create database test_spr2;
+use test_spr2;
+
+create table STUDENT( ID varchar(4) PRIMARY KEY, NAME varchar(100) not null, DEPARTMENT varchar(15) not null, CGPA decimal(2,1) not null);
+insert into STUDENT values ('S001','Arun','CS',8);
+insert into STUDENT values ('S002','Gita','CS',7.5);
+insert into STUDENT values ('S003','Kumar','IT',6);
+insert into STUDENT values ('S004','Rohit','IT',6);
+insert into STUDENT values ('S005','Yamuna','IT',9);
+ insert into STUDENT values ('S006','Yogesh','ECE',9);
+ UPDATE STUDENT SET DEPARTMENT='ECE' WHERE ID='S005';
+ UPDATE STUDENT SET cgpa=8.5 WHERE ID='S004';
+ SELECT * FROM STUDENT;
+ 
+ create table COMPANY( ID varchar(4) PRIMARY KEY, NAME varchar(100) not null, LOCATION varchar(100) not null, INTERVIEW_DATE date not null);
+ insert into COMPANY values ('C001','MICROSOFT','BANGALORE','2020-08-01');
+insert into COMPANY values ('C002','AMAZON','CHENNAI','2020-09-10');
+insert into COMPANY values ('C003','FLIPKART','BANGALORE','2020-09-15');
+insert into COMPANY values ('C004','HONEYWELL','HYDERABAD','2020-10-30');
+ insert into COMPANY values ('C005','ACCENTURE','CHENNAI','2020-11-30');
+ insert into COMPANY values ('C006','WIPRO','NOIDA','2020-12-31');
+SELECT * FROM COMPANY;
+
+
+create table PLACEMENTS( S_ID varchar(4) not null, C_ID varchar(4) not null, PACKAGE int not null, FOREIGN KEY (S_ID) REFERENCES STUDENT (ID), FOREIGN KEY (C_ID) REFERENCES COMPANY (ID));
+insert into PLACEMENTS values ('S001','C001',2000000);
+insert into PLACEMENTS values ('S002','C001',2000000);
+insert into PLACEMENTS values ('S003','C002',1200000);
+insert into PLACEMENTS values ('S004','C004',700000);
+insert into PLACEMENTS values ('S004','C006',400000);
+insert into PLACEMENTS values ('S006','C004',700000);
+SELECT * FROM PLACEMENTS;
+
+
+QUESTION 1:
+ select S.NAME as STUDENT,C.NAME as COMPANY,PACKAGE from STUDENT S JOIN COMPANY C JOIN PLACEMENTS P WHERE S.ID=P.S_ID AND C.ID = P.C_ID AND PACKAGE = (SELECT MAX(PACKAGE) from PLACEMENTS);
+
+
+
+QUESTION 2:
+ select S.NAME as STUDENT,S.DEPARTMENT,(case when S.ID in (select S_ID from PLACEMENTS) then 'YES' else 'NO' end) as PL
+ACED,
+    -> C.NAME as COMPANY,P.PACKAGE 
+    -> from STUDENT S left join PLACEMENTS P on S.ID=P.S_ID left join COMPANY C on P.C_ID=C.ID
+    -> where S.DEPARTMENT='ECE';
+
+
+QUESTION 3:
+select C.NAME as COMPANY,
+(case when C.ID in (select C_ID from PLACEMENTS) then count(C_ID) else '0' end) as NO_OF_STUDENTS 
+from COMPANY C 
+left join PLACEMENTS P 
+on C.ID=P.C_ID
+ group by C.NAME;
+
+QUES:4
+select monthname(INTERVIEW_DATE) as Month ,NAME as Company from COMPANY where monthname(INTERVIEW_DATE)='September';
+
+QUES:5
+select 
+NAME as COMPANY,
+INTERVIEW_DATE as DATE from COMPANY;
+
+
+QUES :6
+SELECT 
+S.NAME as STUDENT,C.NAME as COMPANY 
+FROM STUDENT S 
+JOIN PLACEMENTS P ON S.ID=P.S_ID 
+JOIN COMPANY C ON P.C_ID=C.ID 
+WHERE S.ID IN ( SELECT S_ID FROM PLACEMENTS GROUP BY S_ID HAVING COUNT(*)>1);
+
+
+QUES :7
+select S.NAME,S.DEPARTMENT, S.CGPA 
+from STUDENT S 
+left join PLACEMENTS P 
+on S.ID=P.S_ID 
+where S.CGPA >7 and S.ID not in ( select S_ID from PLACEMENTS);
+
+
+QUES 8:
+select NAME,
+LOCATION
+ from COMPANY 
+ where LOCATION like 'B%';
+
+
